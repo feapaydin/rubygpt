@@ -2,6 +2,7 @@
 
 module Rubygpt
   module Client
+    # Handles the configuration options when initializing a new Rubygpt::Client object
     class Configuration
       class InvalidConfigurationError < StandardError; end
 
@@ -39,9 +40,19 @@ module Rubygpt
 
       def to_headers
         {
-          'Authorization' => "Bearer #{api_key}",
-          'Organization' => organization_id
+          "Authorization" => "Bearer #{api_key}",
+          "Organization" => organization_id
         }.compact
+      end
+
+      class << self
+        def from(configuration_input)
+          case configuration_input
+          when Configuration then configuration_input
+          when Hash then Configuration.new(configuration)
+          else raise InvalidConfigurationError, "Invalid configuration provided for client."
+          end
+        end
       end
     end
   end

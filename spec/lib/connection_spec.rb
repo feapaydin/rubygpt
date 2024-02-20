@@ -2,7 +2,7 @@
 
 RSpec.describe Rubygpt::Connection do
   describe ".new" do
-    let(:configuration) { Rubygpt::Client::Configuration.new(connection_adapter: connection_adapter) }
+    let(:configuration) { Rubygpt::Client::Configuration.new(connection_adapter:) }
     subject(:response) { described_class.new(configuration) }
 
     context "when the adapter is valid" do

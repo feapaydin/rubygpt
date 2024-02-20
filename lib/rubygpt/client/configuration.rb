@@ -15,6 +15,10 @@ module Rubygpt
 
       class InvalidConfigurationError < StandardError; end
 
+      # The connection adapter to use for the client
+      # Defaults to :faraday
+      attr_accessor :connection_adapter
+
       # The API URL to use for the client
       attr_accessor :api_url
 
@@ -32,6 +36,7 @@ module Rubygpt
 
       # The base URL for the OpenAI API
       DEFAULT_API_URL = "https://api.openai.com/v1"
+      DEFAULT_CONNECTION_ADAPTER = :faraday
 
       # Initializes new Rubygpt::Client::Configuration object
       #
@@ -40,11 +45,13 @@ module Rubygpt
       # @option options [String] :api_key
       # @option options [String] :organization_id
       # @option options [String] :model required
+      # @option options [String] :connection_adapter required
       def initialize(options = {})
-        @model = options[:model]
+        @connection_adapter = options[:connection_adapter]
         @api_key = options[:api_key]
         @api_url = options[:api_url] || DEFAULT_API_URL
         @organization_id = options[:organization_id]
+        @model = options[:model]
       end
 
       def validate!

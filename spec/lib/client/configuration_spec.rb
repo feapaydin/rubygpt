@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Rubygpt::Client::Configuration do
+  let(:configuration_input) { { model: "gpt-4-nondefault", api_url: "https://api.openai.com/non/default/url", api_key: "api_key", organization_id: "organization_id", connection_adapter: :non_faraday } }
+
   describe ".from" do
     shared_examples "configuration creator" do
       it "returns a new Configuration object" do
@@ -16,7 +18,6 @@ RSpec.describe Rubygpt::Client::Configuration do
       end
     end
 
-    let(:configuration_input) { { model: "gpt-4-nondefault", api_url: "https://api.openai.com/non/default/url", api_key: "api_key", organization_id: "organization_id", connection_adapter: :non_faraday } }
     subject(:response) { described_class.from(configuration_input) }
 
     context "with a Hash" do
@@ -54,6 +55,28 @@ RSpec.describe Rubygpt::Client::Configuration do
         expect(response.api_url).to eq(described_class::DEFAULT_API_URL)
         expect(response.connection_adapter).to eq(described_class::DEFAULT_CONNECTION_ADAPTER)
         expect(response.organization_id).to be_nil
+      end
+    end
+  end
+
+  describe "#validate!" do
+    subject(:instance) { described_class.new(configuration_input) }
+
+    context "with valid configuration_input" do
+      it "does not raise an error" do
+        expect { instance.validate! }.not_to raise_error
+      end
+    end
+
+    context "with invalid configuration_input" do
+      it "raises error if model is missing" do
+        instance.model = nil
+        expect { instance.validate! }.to raise_error(described_class::InvalidConfigurationError, "model is required")
+      end
+
+      it "raises error if api_key is missing" do
+        instance.api_key = nil
+        expect { instance.validate! }.to raise_error(described_class::InvalidConfigurationError, "api_key is required")
       end
     end
   end

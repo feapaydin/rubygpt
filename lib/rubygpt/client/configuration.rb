@@ -15,12 +15,25 @@ module Rubygpt
       # https://platform.openai.com/docs/api-reference/organization-optional
       attr_reader :organization_id
 
+      # The GPT model to use for the client
+      # Sample values: gpt-4, gpt-4-turbo-preview, gpt-3.5-turbo, gpt-3.5-turbo-instruct
+      # Refer to https://platform.openai.com/docs/models
+      attr_reader :model
+
       # The base URL for the OpenAI API
       DEFAULT_API_URL = "https://api.openai.com/v1"
 
+      # Initializes new Rubygpt::Client::Configuration object
+      #
+      # @param [Hash] options
+      # @option options [String] :api_url required
+      # @option options [String] :api_key
+      # @option options [String] :organization_id
+      # @option options [String] :model required
       def initialize(options = {})
-        @api_url = options[:api_url] || DEFAULT_API_URL
+        @model = options[:model] || raise(InvalidConfigurationError, "model is required")
         @api_key = options[:api_key] || raise(InvalidConfigurationError, "api_key is required")
+        @api_url = options[:api_url] || DEFAULT_API_URL
         @organization_id = options[:organization_id]
       end
 

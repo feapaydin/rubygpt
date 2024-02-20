@@ -9,10 +9,9 @@ module Rubygpt
       # @param [Configuration] configuration
       # @param [Hash] options
       def new(configuration, options = {}, &block)
-        klass = const_get(configuration.connection_adapter.to_s.capitalize)
-        raise Client::Configuration::InvalidConfigurationError, "Invalid adapter provided for connection." unless klass
-
-        klass.new(configuration, options, &block)
+        const_get(configuration.connection_adapter.to_s.capitalize).new(configuration, options, &block)
+      rescue NameError
+        raise Client::Configuration::InvalidConfigurationError, "Invalid adapter provided for connection."
       end
     end
   end

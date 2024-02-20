@@ -1,25 +1,34 @@
 # frozen_string_literal: true
 
 module Rubygpt
-  module Client
+  class Client
     # Handles the configuration options when initializing a new Rubygpt::Client object
     class Configuration
+      # Initializes a new Rubygpt::Client::Configuration object from a hash or another Configuration object
+      def self.from(configuration_input)
+        case configuration_input
+        when Configuration then configuration_input
+        when Hash, nil then Configuration.new(configuration_input || {})
+        else raise InvalidConfigurationError, "Invalid configuration provided for client."
+        end
+      end
+
       class InvalidConfigurationError < StandardError; end
 
       # The API URL to use for the client
-      attr_reader :api_url
+      attr_accessor :api_url
 
       # The API key to use for the client
-      attr_reader :api_key
+      attr_accessor :api_key
 
       # The OpenAI OrganizationID that will be sent when making requests (optional)
       # https://platform.openai.com/docs/api-reference/organization-optional
-      attr_reader :organization_id
+      attr_accessor :organization_id
 
       # The GPT model to use for the client
       # Sample values: gpt-4, gpt-4-turbo-preview, gpt-3.5-turbo, gpt-3.5-turbo-instruct
       # Refer to https://platform.openai.com/docs/models
-      attr_reader :model
+      attr_accessor :model
 
       # The base URL for the OpenAI API
       DEFAULT_API_URL = "https://api.openai.com/v1"
@@ -32,10 +41,15 @@ module Rubygpt
       # @option options [String] :organization_id
       # @option options [String] :model required
       def initialize(options = {})
-        @model = options[:model] || raise(InvalidConfigurationError, "model is required")
-        @api_key = options[:api_key] || raise(InvalidConfigurationError, "api_key is required")
+        @model = options[:model]
+        @api_key = options[:api_key]
         @api_url = options[:api_url] || DEFAULT_API_URL
         @organization_id = options[:organization_id]
+      end
+
+      def validate!
+        raise(InvalidConfigurationError, "model is required") unless model
+        raise(InvalidConfigurationError, "api_key is required") unless api_key
       end
 
       def to_headers
@@ -43,16 +57,6 @@ module Rubygpt
           "Authorization" => "Bearer #{api_key}",
           "Organization" => organization_id
         }.compact
-      end
-
-      class << self
-        def from(configuration_input)
-          case configuration_input
-          when Configuration then configuration_input
-          when Hash then Configuration.new(configuration)
-          else raise InvalidConfigurationError, "Invalid configuration provided for client."
-          end
-        end
       end
     end
   end

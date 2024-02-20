@@ -55,7 +55,7 @@ module Rubygpt
       def to_headers
         {
           "Authorization" => "Bearer #{api_key}",
-          "Organization" => organization_id
+          "OpenAI-Organization" => organization_id
         }.compact
       end
     end

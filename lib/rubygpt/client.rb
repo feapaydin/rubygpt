@@ -15,5 +15,11 @@ module Rubygpt
       yield @configuration if block_given?
       @configuration.validate!
     end
+
+    private
+
+    def connection
+      @connection ||= Connection.new(configuration)
+    end
   end
 end

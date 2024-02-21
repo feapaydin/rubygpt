@@ -16,6 +16,10 @@ module Rubygpt
       @configuration.validate!
     end
 
+    def post(*args)
+      connection.post(*args)
+    end
+
     private
 
     def connection

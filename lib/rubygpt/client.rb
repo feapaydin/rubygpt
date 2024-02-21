@@ -4,7 +4,7 @@ module Rubygpt
   # Main class that issues the connection to OpenAI APIs
   class Client
     # The configuration object for the client
-    attr_accessor :configuration
+    attr_reader :configuration
 
     # Initializes new Rubygpt::Client object
     #

@@ -45,7 +45,7 @@ module Rubygpt
       # @option options [String] :api_key
       # @option options [String] :organization_id
       # @option options [String] :model required
-      # @option options [String] :connection_adapter required
+      # @option options [String] :connection_adapter
       def initialize(options = {})
         @connection_adapter = options[:connection_adapter] || DEFAULT_CONNECTION_ADAPTER
         @api_key = options[:api_key]

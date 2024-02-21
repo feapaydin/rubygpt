@@ -8,8 +8,8 @@ module Rubygpt
       #
       # @param [Configuration] configuration
       # @param [Hash] options
-      def new(configuration, options = {}, &block)
-        const_get(configuration.connection_adapter.to_s.capitalize).new(configuration, options, &block)
+      def new(configuration, options = {})
+        const_get(configuration.connection_adapter.to_s.capitalize).new(configuration, options)
       rescue NameError
         raise Client::Configuration::InvalidConfigurationError, "Invalid adapter provided for connection."
       end

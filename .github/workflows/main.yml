@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
+    name: Build and test
     strategy:
       matrix:
         ruby:
@@ -23,5 +23,5 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run the default task
-      run: bundle exec rake
+    - name: Run the specs
+      run: bundle exec rspec

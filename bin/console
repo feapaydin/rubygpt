@@ -8,7 +8,7 @@ require "rubygpt"
 # with your gem easier. You can also use a different console, if you like.
 
 api_key = ENV["OPENAI_SECRET_TOKEN"] # Your OpenAI API key, saved as environment variable
-model = "gpt-3.5-turbo" # Available for free testing
+model = "gpt-3.5-turbo"
 @client = Rubygpt::Client.new(api_key:, model:)
 @chat = Rubygpt::Requester::ChatRequester.new(@client)
 

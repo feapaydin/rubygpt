@@ -59,14 +59,12 @@ module Rubygpt
       # Handles the messages: data provided in the args
       def messages_from_args(args)
         case args
-        when String then Message.new(args).to_h
+        when String then [Message.new(args).to_h]
         when Array then args.map { |message| Message.new(message).to_h }
         when Hash
-          if args.key?(:messages)
-            args[:messages].map { |message| Message.new(message).to_h }
-          else
-            Message.new(args).to_h
-          end
+          return [Message.new(args).to_h] unless args.key?(:messages)
+
+          args[:messages].map { |message| Message.new(message).to_h }
         else raise ArgumentError, "Invalid message data provided"
         end
       end

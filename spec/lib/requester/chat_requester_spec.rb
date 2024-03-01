@@ -21,8 +21,8 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
         expect(client).to have_received(:post).with(chat_requester.api_endpoint, expected_request_body)
       end
 
-      it "returns a ChatResponse" do
-        expect(response).to be_a(Rubygpt::Response::ChatResponse)
+      it "returns a ChatCompletion" do
+        expect(response).to be_a(Rubygpt::Response::ChatCompletion)
       end
     end
   end

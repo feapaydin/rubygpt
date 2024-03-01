@@ -8,6 +8,7 @@ module Rubygpt
 
       def initialize(standard_response)
         super(standard_response)
+        body = standard_response.body
         @id = body["id"]
         @object = body["object"]
         @create = body["create"]

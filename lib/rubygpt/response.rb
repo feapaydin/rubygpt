@@ -4,8 +4,10 @@ module Rubygpt
   module Response
     # Base class for all API response handlers
     class BaseResponse
-      def initialize(response)
-        @response = response
+      attr_reader :content
+
+      def initialize(content)
+        @content = content
       end
     end
   end

@@ -21,12 +21,12 @@ module Rubygpt
 
     # Base class for all API response handlers
     class BaseResponse
-      attr_reader :content
+      attr_reader :standard_response
 
       def initialize(standard_response)
         raise ConnectionReturnNotStandardizedError unless standard_response.is_a?(StandardApiResponse)
 
-        @content = standard_response.body
+        @standard_response = standard_response
       end
     end
   end

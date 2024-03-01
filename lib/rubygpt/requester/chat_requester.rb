@@ -36,9 +36,9 @@ module Rubygpt
       # Performs a POST request to the API endpoint
       # https://platform.openai.com/docs/api-reference/chat/create
       #
-      # @param [String] args The single message to send. Message will be sent as a system message
+      # @param [String] args The single message to send. Message will be sent with system role
       # @param [Array] args The array of messages to send. Each message can be a string or a hash
-      # @param [Hash] args The arguments for the request
+      # @param [Hash] args The arguments for the request body, including messages
       # @option args [Array] :messages The messages to send
       #
       # @return [ChatResponse]
@@ -50,10 +50,11 @@ module Rubygpt
 
       # Builds the request body for the POST request
       def create_request_body(args)
+        request_body_params = args.is_a?(Hash) ? args.except(:messages) : {}
         {
           model: client.configuration.model,
           messages: messages_from_args(args)
-        }.compact
+        }.merge(request_body_params).compact
       end
 
       # Handles the messages: data provided in the args

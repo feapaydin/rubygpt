@@ -8,7 +8,8 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
     subject(:response) { chat_requester.create(create_args) }
 
     before do
-      allow(client).to receive(:post).and_return(Faraday::Response.new)
+      api_response = Rubygpt::Response::StandardApiResponse.new(status: 200, body: {}, headers: {})
+      allow(client).to receive(:post).and_return(api_response)
     end
 
     context "with string argument" do

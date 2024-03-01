@@ -18,6 +18,14 @@ module Rubygpt
           faraday.response :raise_error
         end
       end
+
+      def post(*args)
+        faraday_response = super(*args)
+        Rubygpt::Response::StandardApiResponse.new(
+          adapter_response: faraday_response,
+          **faraday_response.slice(:status, :body, :headers)
+        )
+      end
     end
   end
 end

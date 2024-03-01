@@ -28,10 +28,14 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
   end
 
   describe "#create_request_body" do
-    subject(:request_body) { chat_requester.send(:create_request_body, { messages: ["test-message"] }) }
+    subject(:request_body) { chat_requester.send(:create_request_body, { messages: ["test-message"], max_tokens: 5 }) }
 
     it "appends the model to the request body" do
       expect(request_body[:model]).to eq("gpt-4")
+    end
+
+    it "allows request body params to be passed in" do
+      expect(request_body[:max_tokens]).to eq(5)
     end
   end
 

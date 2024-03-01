@@ -29,7 +29,6 @@ module Rubygpt
 
       def initialize(client)
         @api_endpoint = "chat/completions"
-        @response_handler = Rubygpt::Response::ChatResponse
         super(client)
       end
 
@@ -41,9 +40,9 @@ module Rubygpt
       # @param [Hash] args The arguments for the request body, including messages
       # @option args [Array] :messages The messages to send
       #
-      # @return [ChatResponse]
+      # @return [Response::ChatCompletion]
       def create(args = {})
-        response_handler.new client.post(api_endpoint, create_request_body(args))
+        Response::ChatCompletion.new client.post(api_endpoint, create_request_body(args))
       end
 
       private

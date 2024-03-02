@@ -9,8 +9,17 @@ module Rubygpt
     #  that might be introduced in the future. To solve this,
     #  we're overriding the post, get, put, delete methods in connection objects to return a StandardApiResponse
     class StandardApiResponse
-      attr_reader :status, :body, :headers, :adapter_response
+      # The HTTP package contents of the response
+      attr_reader :status, :body, :headers
 
+      # The original, non-standardized response object received from the adapter
+      # This is useful for debugging and for accessing adapter-specific features
+      attr_reader :adapter_response
+
+      # @param [Integer] status The HTTP status code
+      # @param [Hash] body The response body
+      # @param [Hash] headers The response headers
+      # @param [Object] adapter_response The original, non-standardized response object received from the adapter
       def initialize(status:, body:, headers:, adapter_response: nil)
         @status = status
         @body = body
@@ -19,14 +28,28 @@ module Rubygpt
       end
     end
 
-    # Base class for all API response handlers
+    # Base class for all API response objects
     class BaseResponse
-      attr_reader :standard_response
+      # The response from the API, standardized by the connection object
+      attr_reader :api_response
 
-      def initialize(standard_response)
-        raise ConnectionReturnNotStandardizedError unless standard_response.is_a?(StandardApiResponse)
+      # @param [StandardApiResponse] api_response The response from the API, standardized by the connection object
+      def initialize(api_response)
+        raise ConnectionReturnNotStandardizedError unless api_response.is_a?(StandardApiResponse)
 
-        @standard_response = standard_response
+        @api_response = api_response
+        build_attributes_from_body
+      end
+
+      private
+
+      # Builds instance variables dynamically from the response body
+      def build_attributes_from_body
+        @api_response.body&.each do |key, value|
+          variable_name = key.to_s.downcase
+          instance_variable_set("@#{variable_name}", value)
+          self.class.send(:attr_reader, variable_name)
+        end
       end
     end
   end

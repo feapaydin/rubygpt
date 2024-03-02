@@ -2,20 +2,19 @@
 
 module Rubygpt
   module Response
-    # Represents the response from the Chat API
+    # Represents the ChatCompletion response from the Chat API
+    # https://platform.openai.com/docs/api-reference/chat/object
     class ChatCompletion < BaseResponse
-      attr_reader :id, :object, :create, :mode, :system_fingerprint, :choice, :usage
+      def initialize(api_response)
+        super
+        build_choices_from_body
+      end
 
-      def initialize(standard_response)
-        super(standard_response)
-        body = standard_response.body
-        @id = body["id"]
-        @object = body["object"]
-        @create = body["create"]
-        @mode = body["mode"]
-        @system_fingerprint = body["system_fingerprint"]
-        @choices = body["choices"]
-        @usage = body["usage"]
+      private
+
+      def build_choices_from_body
+        # TODO: Build choice objects using api_response.body.choices
+        {}
       end
     end
   end

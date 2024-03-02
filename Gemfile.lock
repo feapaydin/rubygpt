@@ -73,6 +73,7 @@ PLATFORMS
 
 DEPENDENCIES
   faraday (~> 2.9)
+  json (~> 2.7.1)
   rake (~> 13.0)
   rspec (~> 3.13.0)
   rubocop (~> 1.60.2)

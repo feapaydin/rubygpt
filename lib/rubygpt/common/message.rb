@@ -4,6 +4,8 @@ module Common
   # Represents a Message object that is used in OpenAI Chat API requests
   class Message
     # The role of the author of this message.
+    # One of: user, assistant, system
+    # Default: system
     attr_reader :role
 
     # The contents of the message.

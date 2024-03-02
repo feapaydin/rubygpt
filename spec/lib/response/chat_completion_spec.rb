@@ -3,18 +3,18 @@
 RSpec.describe Rubygpt::Response::ChatCompletion do
   let(:response_choices) do
     [{
-      "index": 0,
+      "index": 1,
       "message": {
         "role": "assistant",
-        "content": "Hello"
+        "content": "World"
       },
       "logprobs": nil,
       "finish_reason": "stop"
     }, {
-      "index": 1,
+      "index": 0,
       "message": {
         "role": "user",
-        "content": "World"
+        "content": "Hello"
       },
       "logprobs": nil,
       "finish_reason": "stop"
@@ -49,6 +49,12 @@ RSpec.describe Rubygpt::Response::ChatCompletion do
     it "builds the choices" do
       expect(chat_completion.choices).to be_an(Array)
       expect(chat_completion.choices.first).to be_a(Rubygpt::Response::ChatCompletion::Choice)
+    end
+
+    it "sorts the choices by index" do
+      # Sample data contains the first choice with index 1, the second choice with index 0
+      expect(chat_completion.choices[0].index).to eq(0)
+      expect(chat_completion.choices[1].index).to eq(1)
     end
   end
 

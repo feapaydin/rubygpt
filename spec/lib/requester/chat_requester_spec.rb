@@ -92,36 +92,4 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
       end
     end
   end
-
-  describe "Message" do
-    describe "#initialize" do
-      context "with string argument" do
-        subject(:message) { described_class::Message.new("Hello, world!") }
-
-        it "sets role to system" do
-          expect(message.role).to eq("system")
-        end
-
-        it "sets content to the argument" do
-          expect(message.content).to eq("Hello, world!")
-        end
-      end
-
-      context "with hash argument" do
-        subject(:message) { described_class::Message.new(role: "user", content: "Hello, world!", name: "test") }
-
-        it "sets role to the argument" do
-          expect(message.role).to eq("user")
-        end
-
-        it "sets content to the argument" do
-          expect(message.content).to eq("Hello, world!")
-        end
-
-        it "sets name to the argument" do
-          expect(message.name).to eq("test")
-        end
-      end
-    end
-  end
 end

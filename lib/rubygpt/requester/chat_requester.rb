@@ -5,28 +5,9 @@ module Rubygpt
     # Performs CRUD operations for OpenAI Chat Completion Objects
     # https://platform.openai.com/docs/api-reference/chat
     class ChatRequester < BaseRequester
-      # Represents a Message object that will be sent to the API
-      class Message
-        attr_reader :role, :content, :name, :tool_calls, :tool_call_id
-
-        def initialize(options = {})
-          if options.is_a?(String)
-            @role = "system"
-            @content = options
-          else
-            @role = options[:role] || "system"
-            @content = options[:content]
-            @name = options[:name]
-            @tool_calls = options[:tool_calls]
-            @tool_call_id = options[:tool_call_id]
-          end
-        end
-
-        def to_h
-          { role:, content:, name:, tool_calls:, tool_call_id: }.compact
-        end
-      end
-
+      # Initializes the ChatRequester
+      #
+      # @param [Client] client The client object
       def initialize(client)
         @api_endpoint = "chat/completions"
         super(client)
@@ -59,12 +40,12 @@ module Rubygpt
       # Handles the messages: data provided in the args
       def messages_from_args(args)
         case args
-        when String then [Message.new(args).to_h]
-        when Array then args.map { |message| Message.new(message).to_h }
+        when String then [Common::Message.new(args).to_h]
+        when Array then args.map { |message| Common::Message.new(message).to_h }
         when Hash
-          return [Message.new(args).to_h] unless args.key?(:messages)
+          return [Common::Message.new(args).to_h] unless args.key?(:messages)
 
-          args[:messages].map { |message| Message.new(message).to_h }
+          args[:messages].map { |message| Common::Message.new(message).to_h }
         else raise ArgumentError, "Invalid message data provided"
         end
       end

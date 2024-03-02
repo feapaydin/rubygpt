@@ -23,6 +23,7 @@ module Rubygpt
       #
       # @return [Response::ChatCompletion]
       def create(args = {})
+        # TODO: handle args[:stream] for streaming completions
         Response::ChatCompletion.new client.post(api_endpoint, create_request_body(args))
       end
 
@@ -30,11 +31,17 @@ module Rubygpt
 
       # Builds the request body for the POST request
       def create_request_body(args)
-        request_body_params = args.is_a?(Hash) ? args.except(:messages) : {}
-        {
+        request_body = {
           model: client.configuration.model,
           messages: messages_from_args(args)
-        }.merge(request_body_params).compact
+        }
+        if args.is_a?(Hash)
+          # Allowing JSON mode for the request
+          # https://platform.openai.com/docs/guides/text-generation/json-mode
+          request_body[:response_format] = { type: "json_object" } if args[:json]
+          request_body.merge! args.except(:messages, :json)
+        end
+        request_body.compact
       end
 
       # Handles the messages: data provided in the args

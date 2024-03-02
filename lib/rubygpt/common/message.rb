@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 module Common
   # Represents a Message object that is used in OpenAI Chat API requests
   class Message
@@ -28,16 +30,34 @@ module Common
         @role = "system"
         @content = options
       else
-        @role = options[:role] || "system"
-        @content = options[:content]
-        @name = options[:name]
-        @tool_calls = options[:tool_calls]
-        @tool_call_id = options[:tool_call_id]
+        attributes_from_options(options)
       end
+      json_content_parse
     end
 
     def to_h
       { role:, content:, name:, tool_calls:, tool_call_id: }.compact
+    end
+
+    private
+
+    def attributes_from_options(options)
+      @role = options[:role] || "system"
+      @content = options[:content]
+      @name = options[:name]
+      @tool_calls = options[:tool_calls]
+      @tool_call_id = options[:tool_call_id]
+    end
+
+    # Parses the content if it is a JSON string
+    # This is used when the request is made with json: true flag
+    # https://platform.openai.com/docs/guides/text-generation/json-mode
+    def json_content_parse
+      return unless @content.is_a?(String) && @content.start_with?("{", "[")
+
+      @content = JSON.parse(@content, symbolize_names: true)
+    rescue JSON::ParserError
+      nil
     end
   end
 end

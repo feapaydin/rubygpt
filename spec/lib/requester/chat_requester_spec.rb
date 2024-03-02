@@ -37,6 +37,11 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
     it "allows request body params to be passed in" do
       expect(request_body[:max_tokens]).to eq(5)
     end
+
+    it "allows JSON mode for the request" do
+      request_body = chat_requester.send(:create_request_body, { messages: ["test-message"], json: true })
+      expect(request_body[:response_format]).to eq({ type: "json_object" })
+    end
   end
 
   describe "#messages_from_args" do

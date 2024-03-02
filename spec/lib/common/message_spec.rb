@@ -29,5 +29,13 @@ RSpec.describe Common::Message do
         expect(message.name).to eq("test")
       end
     end
+
+    context "with JSON content" do
+      subject(:message) { described_class.new(content: '{"agent": { "code": "007"} }') }
+
+      it "parses the JSON content" do
+        expect(message.content).to eq({ agent: { code: "007" } })
+      end
+    end
   end
 end

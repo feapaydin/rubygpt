@@ -12,6 +12,10 @@ RSpec.describe Common::Message do
       it "sets content to the argument" do
         expect(message.content).to eq("Hello, world!")
       end
+
+      it "does not set json_content" do
+        expect(message).not_to be_json
+      end
     end
 
     context "with hash argument" do
@@ -34,6 +38,7 @@ RSpec.describe Common::Message do
       subject(:message) { described_class.new(content: '{"agent": { "code": "007"} }') }
 
       it "parses the JSON content" do
+        expect(message).to be_json
         expect(message.content).to eq({ agent: { code: "007" } })
       end
     end

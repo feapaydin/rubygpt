@@ -35,6 +35,10 @@ module Common
       json_content_parse
     end
 
+    def json?
+      !!@json_content
+    end
+
     def to_h
       { role:, content:, name:, tool_calls:, tool_call_id: }.compact
     end
@@ -56,6 +60,7 @@ module Common
       return unless @content.is_a?(String) && @content.start_with?("{", "[")
 
       @content = JSON.parse(@content, symbolize_names: true)
+      @json_content = true
     rescue JSON::ParserError
       nil
     end

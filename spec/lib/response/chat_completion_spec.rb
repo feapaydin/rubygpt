@@ -90,4 +90,27 @@ RSpec.describe Rubygpt::Response::ChatCompletion do
       end
     end
   end
+
+  describe "Choice" do
+    subject(:choice) { chat_completion.choices.first }
+
+    describe "#initialize" do
+      it "convers the message to a Message object" do
+        expect(choice.message).to be_a(Common::Message)
+        expect(choice.message.role).to eq("user")
+        expect(choice.message.content).to eq("Hello")
+      end
+    end
+
+    describe "#failed?" do
+      it "returns true if the finish reason is not 'stop'" do
+        expect(choice).not_to be_failed
+      end
+
+      it "returns false if the finish reason is 'stop'" do
+        choice.instance_variable_set(:@finish_reason, "length")
+        expect(choice).to be_failed
+      end
+    end
+  end
 end

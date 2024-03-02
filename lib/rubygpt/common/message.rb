@@ -4,6 +4,7 @@ require "json"
 
 module Common
   # Represents a Message object that is used in OpenAI Chat API requests
+  # This object is referenced by both ChatRequester and ChatCompletion objects
   class Message
     # The role of the author of this message.
     # One of: user, assistant, system

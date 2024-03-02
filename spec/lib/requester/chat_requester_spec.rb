@@ -8,7 +8,7 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
     subject(:response) { chat_requester.create(create_args) }
 
     before do
-      api_response = Rubygpt::Response::StandardApiResponse.new(status: 200, body: {}, headers: {})
+      api_response = Rubygpt::Response::StandardApiResponse.new(status: 200, body: { choices: [] }, headers: {})
       allow(client).to receive(:post).and_return(api_response)
     end
 

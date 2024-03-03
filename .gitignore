@@ -9,3 +9,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+# Direnv environment file for local testing purposes
+.envrc

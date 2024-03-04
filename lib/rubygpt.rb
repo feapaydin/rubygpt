@@ -20,6 +20,7 @@ module Rubygpt
     #
     # @return [Client]
     def configure(configuration = nil, &block)
+      reset_requesters
       @default_client = Client.new(configuration, &block)
     end
 
@@ -29,6 +30,11 @@ module Rubygpt
     # @return [Requester::ChatRequester]
     def chat
       @chat ||= Requester::ChatRequester.new(@default_client)
+    end
+
+    # Remove memoized requester objects to allow reallocation
+    def reset_requesters
+      @chat = nil
     end
   end
 end

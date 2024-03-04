@@ -18,3 +18,4 @@ Metrics/BlockLength:
     - 'config/**/*'
     - 'db/**/*'
     - 'lib/tasks/**/*'
+    - 'rubygpt.gemspec'

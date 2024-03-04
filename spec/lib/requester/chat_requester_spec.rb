@@ -25,6 +25,14 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
         expect(response).to be_a(Rubygpt::Response::ChatCompletion)
       end
     end
+
+    context "with messages without bodies" do
+      subject(:response) { chat_requester.create }
+
+      it "raises ArgumentError" do
+        expect { response }.to raise_error(ArgumentError, "Empty message contents found.")
+      end
+    end
   end
 
   describe "#create_request_body" do

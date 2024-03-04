@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
     It is designed to be simple and easy to use, while also providing a high level of customization.
     It is also aiming to work efficiently in Ruby on Rails applications.`
   spec.homepage = "https://github.com/feapaydin/rubygpt"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 3.3.0"
 
   spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 

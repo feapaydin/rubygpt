@@ -2,6 +2,8 @@ PATH
   remote: .
   specs:
     rubygpt (0.1.0)
+      faraday (~> 2.9)
+      json (~> 2.7.1)
 
 GEM
   remote: https://rubygems.org/

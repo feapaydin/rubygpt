@@ -67,33 +67,35 @@ RSpec.describe Rubygpt::Requester::ChatRequester do
       end
     end
 
-    context "with hash argument" do
-      context "when messages key present" do
-        let(:args) { { messages: ["Hello, world!", "How are you?"] } }
-
-        it "creates messages for each content with default attributes" do
-          expected_messages = [
-            { role: "system", content: "Hello, world!" },
-            { role: "system", content: "How are you?" }
-          ]
-          expect(messages).to eq(expected_messages)
-        end
-      end
-
-      context "when messages key not present" do
-        let(:args) { { content: "Hello, world!", role: "user" } }
-
-        it "creates a message from hash" do
-          expect(messages).to eq([{ content: "Hello, world!", role: "user" }])
-        end
-      end
-    end
-
     context "with invalid argument" do
       let(:args) { 123 }
 
       it "raises an ArgumentError" do
         expect { messages }.to raise_error(ArgumentError, "Invalid message data provided")
+      end
+    end
+  end
+
+  describe "#messages_from_hash" do
+    subject(:messages) { chat_requester.send(:messages_from_hash, args) }
+
+    context "when messages key present" do
+      let(:args) { { messages: ["Hello, world!", "How are you?"] } }
+
+      it "creates messages for each content with default attributes" do
+        expected_messages = [
+          { role: "system", content: "Hello, world!" },
+          { role: "system", content: "How are you?" }
+        ]
+        expect(messages).to eq(expected_messages)
+      end
+    end
+
+    context "when messages key not present" do
+      let(:args) { { content: "Hello, world!", role: "user" } }
+
+      it "creates a message from hash" do
+        expect(messages).to eq([{ content: "Hello, world!", role: "user" }])
       end
     end
   end

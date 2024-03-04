@@ -31,29 +31,52 @@ module Rubygpt
 
       # Builds the request body for the POST request
       def create_request_body(args)
-        request_body = {
-          model: client.configuration.model,
-          messages: messages_from_args(args)
-        }
+        request_body = { model: client.configuration.model }
         if args.is_a?(Hash)
           # Allowing JSON mode for the request
           # https://platform.openai.com/docs/guides/text-generation/json-mode
           request_body[:response_format] = { type: "json_object" } if args[:json]
+          request_body[:messages] = messages_from_hash(args)
           request_body.merge! args.except(:messages, :json)
+        else
+          request_body[:messages] = messages_from_args(args)
         end
         request_body.compact
       end
 
-      # Handles the messages: data provided in the args
+      # Handles the message data provided as arguments
       def messages_from_args(args)
-        case args
-        when String then [Common::Message.new(args).to_h]
-        when Array then args.map { |message| Common::Message.new(message).to_h }
-        when Hash
-          return [Common::Message.new(args).to_h] unless args.key?(:messages)
+        messages =
+          case args
+          when String then [Common::Message.new(args)]
+          when Array then args.map { |message| Common::Message.new(message) }
+          else raise ArgumentError, "Invalid message data provided"
+          end
+        map_messages(messages)
+      end
 
-          args[:messages].map { |message| Common::Message.new(message).to_h }
-        else raise ArgumentError, "Invalid message data provided"
+      # Handles the message data provided as a hash
+      def messages_from_hash(hash)
+        messages =
+          if hash.key?(:messages)
+            # If it is a hash with a :messages key, then it's a request config with messages provided explicitly
+            # { messages: [{ content: 'foo', role: 'user' }, { content: 'bar', role: 'system' }] }
+            hash[:messages].map { |message| Common::Message.new(message) }
+          else
+            # If it is a hash without a :messages key, then it's a message config itself
+            # { content: 'foo', role: 'user' }
+            [Common::Message.new(hash)]
+          end
+        map_messages(messages)
+      end
+
+      # Maps the messages to a hash
+      # Validates the messages and raises an error if no messages are provided
+      def map_messages(messages)
+        messages.map do |message|
+          raise ArgumentError, "Empty message contents found." if message.empty?
+
+          message.to_h
         end
       end
     end

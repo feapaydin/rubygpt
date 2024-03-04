@@ -9,8 +9,7 @@ require "rubygpt"
 
 api_key = ENV["OPENAI_SECRET_TOKEN"] # Your OpenAI API key, saved as environment variable
 model = "gpt-3.5-turbo"
-@client = Rubygpt::Client.new(api_key:, model:)
-@chat = Rubygpt::Requester::ChatRequester.new(@client)
+@client = Rubygpt.configure(api_key:, model:)
 
 require "irb"
 IRB.start(__FILE__)

@@ -11,6 +11,24 @@ require_relative "rubygpt/response/chat_completion"
 require_relative "rubygpt/requester"
 require_relative "rubygpt/requester/chat_requester"
 
+# The main module for Rubygpt
+# Contains static methods for configuration
 module Rubygpt
-  class Error < StandardError; end
+  class << self
+    # The default singleton client for the module
+    # Allows a global configuration to be set across the module
+    #
+    # @return [Client]
+    def configure(configuration = nil, &block)
+      @default_client = Client.new(configuration, &block)
+    end
+
+    # A ChatRequester object, configured by default client
+    # Allows the Rubygpt.chat calls
+    #
+    # @return [Requester::ChatRequester]
+    def chat
+      @chat ||= Requester::ChatRequester.new(@default_client)
+    end
+  end
 end

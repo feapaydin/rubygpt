@@ -1,4 +1,4 @@
-name: Ruby
+name: Spec
 
 on:
   push:
@@ -15,7 +15,6 @@ jobs:
       matrix:
         ruby:
           - '3.3.0'
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Ruby

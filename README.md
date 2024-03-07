@@ -4,26 +4,46 @@ This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's
 
 ## Usage
 
+### Installation
+
+> TBD After the first release.
 
 ### Configuration
 
-In order to access the OpenAI APIs, you must configure the rubygpt client with your API key and the preferred ChatGPT model to use. This can be done in the client initialization.
+In order to access the OpenAI APIs, you must configure the Rubygpt client with your API key and the preferred ChatGPT model to use. This can be done globally for the entire application, or on a per-request basis.
 
 ```ruby
-# Initialize the client with required attributes
-Rubygpt::Client.new(api_key: 'YOUR_API_KEY', model: 'gpt-3.5-turbo')
+Rubygpt.configure(api_key: 'YOUR_API_KEY', model: 'gpt-3.5-turbo')
 ```
 
 Alternatively, you can provide a block to set the configuration options:
 
 ```ruby
-Rubygpt::Client.new do |config|
+Rubygpt.configure do |config|
     config.api_key = 'YOUR_API_KEY'
     config.model = 'gpt-3.5-turbo'
 end
 ```
 
-The following attributes can be configured while initializing the client:
+The above examples will create a singleton client that works across the entire application.
+
+If you'd like to use different configurations for different parts of your application, you can manually create  client instances and configure them separately:
+
+```ruby
+# Setup different client objects with different configurations
+client_gpt3 = Rubygpt::Client.new(api_key: 'YOUR_API_KEY', model: 'gpt-3.5-turbo')
+client_gpt4 = Rubygpt::Client.new do |config|
+    config.api_key = 'YOUR_SECOND_API_KEY'
+    config.model = 'gpt-4'
+end
+
+# Use the client objects to create different requesters
+chat_requester_gpt3 = Rubygpt::Requester::ChatRequester.new(client_gpt3)
+chat_requester_gpt4 = Rubygpt::Requester::ChatRequester.new(client_gpt4)
+```
+
+
+The following attributes can be configured when initializing the client:
 
 - `api_key` (required): Your OpenAI API key
 - `model` (required): The model to use for the API requests.
@@ -33,7 +53,7 @@ The following attributes can be configured while initializing the client:
 
 #### Connection Adapters
 
-The rubygpt client uses [Faraday](https://github.com/lostisland/faraday) to manage HTTP connections. This allows the entire power of Faraday to be used for the API requests, including diverse HTTP adapters and features like streaming.
+The Rubygpt client uses [Faraday](https://github.com/lostisland/faraday) to manage HTTP connections. This allows the entire power of Faraday to be used for the API requests, including diverse HTTP adapters and features like streaming.
 
 ### Chat Completions API
 
@@ -43,8 +63,10 @@ See the [OpenAI Chat Completions API documentation](https://platform.openai.com/
 
 #### Performing Requests
 
+After configuring the Rubygpt client, you can perform requests to the Chat Completions API with static call.
+
 ```ruby
-# TODO: Usage sample for Chat api.
+Rubygpt.chat.create("Within cells interlinked.")
 ```
 
 ## Development

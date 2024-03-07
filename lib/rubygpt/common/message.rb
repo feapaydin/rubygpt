@@ -40,6 +40,10 @@ module Common
       !!@json_content
     end
 
+    def empty?
+      content.nil? || content.empty?
+    end
+
     def to_h
       { role:, content:, name:, tool_calls:, tool_call_id: }.compact
     end

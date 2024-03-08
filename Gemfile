@@ -14,5 +14,6 @@ gem "json", "~> 2.7.1"
 group :test do
   gem "rspec", "~> 3.13.0"
   gem "rubocop", "~> 1.60.2"
+  gem "simplecov", "~> 0.22.0", require: false
   gem "webmock", "~> 3.23.0"
 end

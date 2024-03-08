@@ -6,7 +6,7 @@
 
 # RubyGPT
 
-This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's GPT API. It is designed to be simple and easy to use, while also providing a high level of customization. It is also aiming to work efficiently in Ruby on Rails applications.
+This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's ChatGPT API. It is designed to be simple and easy to use, while also providing a high level of customization. It is also aiming to work efficiently in Ruby on Rails applications.
 
 ### Capabilities
 

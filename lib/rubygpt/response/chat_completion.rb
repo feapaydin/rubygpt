@@ -29,6 +29,15 @@ module Rubygpt
           @finish_reason = finish_reason
         end
 
+        # Delegations to the message object
+        def content
+          message.content
+        end
+
+        def role
+          message.role
+        end
+
         # Returns true if the choice failed to generate a complete message
         def failed?
           finish_reason != "stop"
@@ -38,6 +47,9 @@ module Rubygpt
           { index:, message: message.to_h, logprobs:, finish_reason: }.compact
         end
       end
+
+      # Readers for the standard attributes of the ChatCompletion object
+      attr_reader :id, :object, :created, :model, :system_fingerprint, :usage, :choices
 
       # Initializes the ChatCompletion object
       #

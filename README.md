@@ -1,33 +1,236 @@
+[![Gem Version](https://badge.fury.io/rb/rubygpt.svg)](https://badge.fury.io/rb/rubygpt)
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop/rubocop)
+[![Spec](https://github.com/feapaydin/rubygpt/actions/workflows/spec.yml/badge.svg?branch=main)](https://github.com/feapaydin/rubygpt/actions/workflows/spec.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/55d19b1c7fbe8c48e9ca/maintainability)](https://codeclimate.com/github/feapaydin/rubygpt/maintainability)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # RubyGPT
 
-This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's GPT API. It is designed to be simple and easy to use, while also providing a high level of customization. It is also aiming to work efficiently in Ruby on Rails applications.
+This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's ChatGPT API. It is designed to be simple and easy to use, while also providing a high level of customization. It is also aiming to work efficiently in Ruby on Rails applications.
+
+### Capabilities
+
+- [Chat Completions API](#chat-completions-api)
+  - [JSON Mode Support](#json-mode-messages)
+
+The gem is in the early stages. It's designed to be easily extendable for other modules of the OpenAI APIs and products in the future. See [Contributing](#contributing) section for more details.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Install the gem directly via bundler:
 
-Install the gem and add to the application's Gemfile by executing:
+```sh
+$ bundle install rubygpt
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Or add it to your `Gemfile` for your project:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```ruby
+gem "rubygpt"
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+And then execute:
 
-## Usage
+```sh
+$ bundle install
+```
 
-TODO: Write usage instructions here
+##  Configuration
+
+In order to access the OpenAI APIs, you must configure the Rubygpt client with your API key and the preferred ChatGPT model to use. This can be done globally for the entire application, or on a per-request basis.
+
+```ruby
+Rubygpt.configure(api_key: 'YOUR_API_KEY', model: 'gpt-3.5-turbo')
+```
+
+Alternatively, you can provide a block to set the configuration options:
+
+```ruby
+Rubygpt.configure do |config|
+    config.api_key = 'YOUR_API_KEY'
+    config.model = 'gpt-3.5-turbo'
+end
+```
+
+The above examples will create a singleton client that works across the entire application.
+
+If you'd like to use different configurations for different parts of your application, you can manually create  client instances and configure them separately:
+
+```ruby
+# Setup different client objects with different configurations
+client_gpt3 = Rubygpt::Client.new(api_key: 'YOUR_API_KEY', model: 'gpt-3.5-turbo')
+client_gpt4 = Rubygpt::Client.new do |config|
+    config.api_key = 'YOUR_SECOND_API_KEY'
+    config.model = 'gpt-4'
+    config.organization_id = 'OPENAI_ORG_ID'
+end
+
+# Use the client objects to create different requesters
+chat_requester_gpt3 = Rubygpt::Requester::ChatRequester.new(client_gpt3)
+chat_requester_gpt4 = Rubygpt::Requester::ChatRequester.new(client_gpt4)
+```
+
+The following attributes can be configured when initializing the client:
+
+- `api_key` (required): Your OpenAI API key
+- `model` (required): The model to use for the API requests.
+- `api_url`: The base URL for the API requests. The default is `https://api.openai.com/v1`
+- `organization_id`: The organization ID to use for the API requests.
+- `connection_adapter`: The HTTP connection adapter to use for the API requests. The default is `:faraday`
+
+#### Connection Adapters
+
+The Rubygpt client uses [Faraday](https://github.com/lostisland/faraday) to manage HTTP connections. This allows the entire power of Faraday to be used for the API requests, including diverse HTTP adapters and features like streaming.
+
+## Chat Completions API
+
+Chat Completions is a Text Completion feature provided by OpenAI's ChatGPT. It can be used to generate human-like responses to a given prompt. It is one of the core features of the ChatGPT.
+
+See the [OpenAI Chat Completions API documentation](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) and related [Chat API reference](https://platform.openai.com/docs/api-reference/chat/create) for more information.
+
+### Sending Messages
+
+After configuring the Rubygpt client, you can perform requests to the Chat Completions API directly.
+
+```ruby
+# Send a message to GPT
+Rubygpt.chat.create("A system of cells interlinked.") # any message you'd like to send
+
+# Send multiple messages
+Rubygpt.chat.create(["Within cells interlinked", "Within cells interlinked", "Within one stem"])
+```
+
+To use the received responses, refer to the [Using Chat Completion Responses](#using-chat-completion-responses) section.
+
+### Customizing the Messages
+
+By default each message is sent with `system` role and the provided contents in the call.
+
+```ruby
+Rubygpt.chat.create("Test message.") # { role: "system", content: "Test message." }
+```
+
+You can customize the request by providing additional parameters to the `create` method.
+
+A `Message` object consist of following attributes:
+- `role`: The role of the messages author.
+- `content`: The content of the message.
+- `name`: The name of the messages author or function name. (has multiple use cases, see OpenAI docs for details)
+- `tool_calls`: The tool calls generated by the model, such as function calls. (role: assistant only)
+- `tool_call_id`: Tool call that this message is responding to. (role: tool only)
+
+For extended details on the attributes, visit the [OpenAI Chat API reference](https://platform.openai.com/docs/api-reference/chat/create).
+
+```ruby
+Rubygpt.chat.create(role: 'user', content: "What is Ruby?")
+Rubygpt.chat.create(role: 'assistant', name: 'furkan', content: "Ruby is a...")
+```
+It is also possible to send multiple message objects with a single request.
+
+```ruby
+messages = [
+    { role: 'user', content: "foo" },
+    { role: 'assistant', name: 'johndoe', content: "bar" }
+]
+Rubygpt.chat.create(messages) # send the array/hash directly
+Rubygpt.chat.create(messages:) # also works as a keyword argument
+```
+
+### Customizing The Requests
+
+You can send any available request body parameter supported by OpenAI Chat Completion API to the `Rubygpt.chat.create` method. Just send the messages in the `messages:` keyword argument. Any additional parameters you'll provide will be passed-through to the request body directly.
+
+```ruby
+Rubygpt.chat.create(
+    n: 5,
+    messages: ["What time is it?"],
+    model: 'gpt-4-turbo-preview', # overrides your client config when provided explicity here
+    max_tokens: 100,
+    frequency_penalty: 1.0,
+    tempature: 1,
+    user: 'feapaydin',
+    json: true # DO NOT provide response_format for JSON mode, use this flag
+)
+```
+
+### JSON Mode Messages
+
+The JSON Mode is a feature of the Chat Completions API that forces the model to generate a JSON response. 
+
+> A common way to use Chat Completions is to instruct the model to always return a JSON object that makes sense for your use case, by specifying this in the system message. While this does work in some cases, occasionally the models may generate output that does not parse to valid JSON objects.
+
+See [JSON Mode official docs](https://platform.openai.com/docs/guides/text-generation/json-mode) for more details.
+
+To send a message in JSON mode, you can simply send `json: true` option along with your message.
+
+```ruby
+# Single message with JSON mode
+Rubygpt.chat.create(content: "List all programming languages by their creation date.", json: true)
+
+# Multiple messages with JSON mode
+messages = [
+    { role: 'user', content: "List all programming languages by their creation date." },
+    { role: 'user', content: "Also add their creator's name to the objects." }
+]
+Rubygpt.chat.create(messages:, json: true)
+```
+
+### Stream Mode
+
+Streaming mode is a feature of the Chat Completions API that allows the model to generate a continuous stream of messages. This is useful for chat applications where the model is expected to generate multiple or longer responses to a single prompt.
+
+Stream mode is not supported at the moment, but it's planned to be implemented in the future versions.
+
+### Using Chat Completion Responses
+
+Regardless of the amount of messages sent, the response will be an instance of `Response::ChatCompletion` object.
+The object wraps a set of methods to easily access the response data provided by the [OpenAI Chat API: Create](https://platform.openai.com/docs/api-reference/chat/create).
+
+```ruby
+response = Rubygpt.chat.create("What time is it?", "Also tell me the date.")
+response.messages # ["It's 12:00 PM.", "Today is 2032-01-01."]
+response.read # => "It's 12:00 PM. Today is 2032-01-01."
+response.failed? # => true if any message (choice) have finish_reason other than "stop"
+response.cost # => Total cost of the request (usage.total_tokens)
+response.to_h # => Hash representation of the response
+
+# Full attributes:
+# :id, :object, :created, :model, :system_fingerprint, :usage, :choices
+```
+
+Each Choice in the response is an instance of `Response::ChatCompletion::Choice` object.
+
+```ruby
+response = Rubygpt.chat.create("What time is it?", "Also tell me the date.")
+response.choices # => [Response::ChatCompletion::Choice, Response::ChatCompletion::Choice]
+response.choices.first.index # => 0
+response.choices.first.message # => <#Common::Message>
+response.choices.first.content # => "It's 12:00 PM." - delegated from message
+response.choices.first.role # => "system" - delegated from message
+response.choices.first.finish_reason # => "stop"
+response.choices.first.failed? # => false, unless finish_reason is not "stop"
+response.choices.first.to_h # => Hash representation of the choice
+response.choices.first.logprobs # => Log probabilities of the tokens, hash or null
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+The console contains a pre-configured Rubygpt client with a test API key. See [bin/console](bin/console) for more details.
+
+To set the API key for the tests, set the environment variable `OPENAI_API_KEY` to access the APIs.
+
+```sh
+export OPENAI_API_KEY=your_api_key
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rubygpt. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/rubygpt/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/feapaydin/rubygpt. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/feapaydin/rubygpt/blob/main/CODE_OF_CONDUCT.md).
+
+Participations are much welcome in this project as it's still in the early stages of development. You can contribute by addressing the issues flagged as `good first issue` or `help wanted` in the issues section. You can also contribute by opening new issues, suggesting new features, or reporting bugs.
 
 ## Code of Conduct
 
-Everyone interacting in the Rubygpt project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rubygpt/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Rubygpt project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/feapaydin/rubygpt/blob/main/CODE_OF_CONDUCT.md).

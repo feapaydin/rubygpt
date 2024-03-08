@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 3.3.0
+  TargetRubyVersion: 3.2.0
 
 Style/StringLiterals:
   Enabled: true
@@ -18,3 +18,4 @@ Metrics/BlockLength:
     - 'config/**/*'
     - 'db/**/*'
     - 'lib/tasks/**/*'
+    - 'rubygpt.gemspec'

@@ -8,6 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Furkan Enes Apaydin"]
   spec.email = ["feapaydin@gmail.com"]
 
+  spec.license = "MIT"
+
   spec.summary = "Ruby wrapper for OpenAI's ChatGPT APIs."
   spec.description = `
     This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's GPT API.

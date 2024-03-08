@@ -24,3 +24,8 @@ jobs:
         bundler-cache: true
     - name: Run the specs
       run: bundle exec rspec
+    - name: SimpleCov Coverage
+      uses: joshmfrankel/simplecov-check-action@main
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        minimum_suite_coverage: 85

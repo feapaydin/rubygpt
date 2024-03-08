@@ -48,9 +48,6 @@ module Rubygpt
         end
       end
 
-      # Readers for the standard attributes of the ChatCompletion object
-      attr_reader :id, :object, :created, :model, :system_fingerprint, :usage, :choices
-
       # Initializes the ChatCompletion object
       #
       # @param [StandardApiResponse] api_response The response from the API, standardized by the connection object
@@ -76,7 +73,7 @@ module Rubygpt
       end
 
       def cost
-        usage[:total_tokens]
+        usage["total_tokens"] || usage[:total_tokens]
       end
 
       def to_h

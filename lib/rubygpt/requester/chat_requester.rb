@@ -37,7 +37,7 @@ module Rubygpt
           # https://platform.openai.com/docs/guides/text-generation/json-mode
           request_body[:response_format] = { type: "json_object" } if args[:json]
           request_body[:messages] = messages_from_hash(args)
-          request_body.merge! args.except(:messages, :json)
+          request_body.merge! args.except(:messages, :json, *Common::Message::MESSAGE_REQUEST_KEYS)
         else
           request_body[:messages] = messages_from_args(args)
         end

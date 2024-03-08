@@ -23,7 +23,9 @@ module Rubygpt
         faraday_response = super(*args)
         Rubygpt::Response::StandardApiResponse.new(
           adapter_response: faraday_response,
-          **faraday_response.slice(:status, :body, :headers)
+          status: faraday_response.status,
+          body: faraday_response.body,
+          headers: faraday_response.headers
         )
       end
     end

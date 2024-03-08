@@ -94,10 +94,10 @@ After configuring the Rubygpt client, you can perform requests to the Chat Compl
 
 ```ruby
 # Send a message to GPT
-Rubygpt.chat.create("A system of cells interlinked.") # any message you'd like to send
+Rubygpt.chat.create("Where is London?.") # any message you'd like to send
 
 # Send multiple messages
-Rubygpt.chat.create(["Within cells interlinked", "Within cells interlinked", "Within one stem"])
+Rubygpt.chat.create(["Where is UK?", "What Continent?", "What timezone?"])
 ```
 
 To use the received responses, refer to the [Using Chat Completion Responses](#using-chat-completion-responses) section.
@@ -202,7 +202,7 @@ Each Choice in the response is an instance of `Response::ChatCompletion::Choice`
 
 ```ruby
 response = Rubygpt.chat.create("What time is it?", "Also tell me the date.")
-response.choices # => [Response::ChatCompletion::Choice, Response::ChatCompletion::Choice]
+response.choices # => [Response::ChatCompletion::Choice]
 response.choices.first.index # => 0
 response.choices.first.message # => <#Common::Message>
 response.choices.first.content # => "It's 12:00 PM." - delegated from message

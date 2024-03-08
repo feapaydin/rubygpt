@@ -165,7 +165,7 @@ To send a message in JSON mode, you can simply send `json: true` option along wi
 
 ```ruby
 # Single message with JSON mode
-Rubygpt.chat.create(content: "List all programming languages by their creation date.", json: true)
+Rubygpt.chat.create(content: "List all programming languages by their creation date in a json.", json: true)
 
 # Multiple messages with JSON mode
 messages = [
@@ -174,6 +174,8 @@ messages = [
 ]
 Rubygpt.chat.create(messages:, json: true)
 ```
+
+An important note is that the `messages` data must contain the keyword `json` ("explain in JSON format...") when using the JSON mode. This is required by ChatGPT APIs.
 
 ### Stream Mode
 

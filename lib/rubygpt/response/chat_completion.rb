@@ -73,7 +73,7 @@ module Rubygpt
       end
 
       def cost
-        usage["total_tokens"]
+        usage["total_tokens"] || usage[:total_tokens]
       end
 
       def to_h

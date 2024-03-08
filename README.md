@@ -142,14 +142,13 @@ You can send any available request body parameter supported by OpenAI Chat Compl
 
 ```ruby
 Rubygpt.chat.create(
-    n: 5,
-    messages: ["What time is it?"],
+    n: 3,
+    messages: ["Explain the history of Istanbul."],
     model: 'gpt-4-turbo-preview', # overrides your client config when provided explicity here
     max_tokens: 100,
     frequency_penalty: 1.0,
-    tempature: 1,
-    user: 'feapaydin',
-    json: true # DO NOT provide response_format for JSON mode, use this flag
+    temperature: 1,
+    user: 'feapaydin'
 )
 ```
 
@@ -169,8 +168,8 @@ Rubygpt.chat.create(content: "List all programming languages by their creation d
 
 # Multiple messages with JSON mode
 messages = [
-    { role: 'user', content: "List all programming languages by their creation date." },
-    { role: 'user', content: "Also add their creator's name to the objects." }
+    { role: 'user', content: "List all programming languages by their creation date as JSON." },
+    { role: 'user', content: "Also add their creator's name to the objects to JSON attributes." }
 ]
 Rubygpt.chat.create(messages:, json: true)
 ```

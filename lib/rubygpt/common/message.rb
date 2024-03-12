@@ -6,6 +6,9 @@ module Common
   # Represents a Message object that is used in OpenAI Chat API requests
   # This object is referenced by both ChatRequester and ChatCompletion objects
   class Message
+    # The keys that are used in the request body for messages
+    MESSAGE_REQUEST_KEYS = %i[role content name tool_calls tool_call_id].freeze
+
     # The role of the author of this message.
     # One of: user, assistant, system
     # Default: system

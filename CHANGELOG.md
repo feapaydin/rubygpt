@@ -1,4 +1,11 @@
-## [Unreleased]
+## RubyGPT
+
+## [0.1.1] - 2024-03-13
+
+- Fixed cost reader in response object
+- Fixed standard response generation from faraday response
+- Fixed a bug in message building from hash contents
+- Gemspec configuration adjustments (license)
 
 ## [0.1.0] - 2024-03-08
 

@@ -11,10 +11,11 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
 
   spec.summary = "Ruby wrapper for OpenAI's ChatGPT APIs."
-  spec.description = `
+  spec.description = <<~DESC
     This gem aims to provide an easy-to-use Ruby wrapper for all modules of OpenAI's GPT API.
     It is designed to be simple and easy to use, while also providing a high level of customization.
-    It is also aiming to work efficiently in Ruby on Rails applications.`
+    It is also aiming to work efficiently in Ruby on Rails applications.
+  DESC
   spec.homepage = "https://github.com/feapaydin/rubygpt"
   spec.required_ruby_version = ">= 3.2.0"
 

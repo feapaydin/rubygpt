@@ -1,5 +1,10 @@
 ## RubyGPT
 
+## [0.1.2] - 2024-08-28
+
+- Fixed unexpected EOF error message when running gem
+- Gem dependency updates
+
 ## [0.1.1] - 2024-03-13
 
 - Fixed cost reader in response object

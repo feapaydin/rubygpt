@@ -22,7 +22,7 @@ module Rubygpt
         attr_reader :finish_reason
 
         # Initializes the Choice object
-        def initialize(index:, message:, logprobs:, finish_reason:)
+        def initialize(index:, message:, finish_reason:, logprobs: nil)
           @index = index
           @message = Common::Message.new(**message.transform_keys(&:to_sym))
           @logprobs = logprobs

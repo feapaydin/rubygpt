@@ -1,5 +1,9 @@
 ## RubyGPT
 
+## [0.1.3] - 2025-10-24
+
+- Bugfix: Handle empty logprobs in chat completion response
+
 ## [0.1.2] - 2024-08-28
 
 - Fixed unexpected EOF error message when running gem
